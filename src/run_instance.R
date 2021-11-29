@@ -43,23 +43,24 @@ run.one <- function(config_file, config_id, trial) {
 
   if(config$graph.cluster.randomization) {
       methods <- list("Actual"=function(junk1, junk2) gendata$outcome.function, 
-                      "Exp-GBM"=gbm.estimate, 
-                      "Exp-LM-IND"=lam.I, 
-                      "Exp-LM-INT"=lam.II, 
+                      # "Exp-GBM"=gbm.estimate, 
+                      # "Exp-LM-IND"=lam.I, 
+                      # "Exp-LM-INT"=lam.II, 
                       "Obs-GBM-Sufficient"=obs.gbm.sufficient,
-                      "Exp-HT"=function(adj.mat, data) {
-                        htmeans <- ugander.horvitz.thompson(adj.mat, data, gendata$clusters, 0.75)
-                        return(function(myt=NULL, friendt=NULL) {
-                          if(is.null(myt) || is.null(friendt)) {
-                            return(NA)
-                          } else if(myt == 1 & friendt == 1) {
-                            return(htmeans$tmean)
-                          } else if(myt == 0 & friendt == 0) {
-                            return(htmeans$cmean)
-                          } else {
-                            return(NA)
-                          }
-                        })
+                      # "Exp-HT"=function(adj.mat, data) {
+                      #   htmeans <- ugander.horvitz.thompson(adj.mat, data, gendata$clusters, 0.75)
+                      #   return(function(myt=NULL, friendt=NULL) {
+                      #     if(is.null(myt) || is.null(friendt)) {
+                      #       return(NA)
+                      #     } else if(myt == 1 & friendt == 1) {
+                      #       return(htmeans$tmean)
+                      #     } else if(myt == 0 & friendt == 0) {
+                      #       return(htmeans$cmean)
+                      #     } else {
+                      #       return(NA)
+                      #     }
+                      #   }
+                        )
                       }
                     )
   } else {
@@ -68,9 +69,10 @@ run.one <- function(config_file, config_id, trial) {
                       "Obs-LM-Simple"=obs.linear.simple, 
                       "Obs-LM-Sufficient"=obs.linear.sufficient, 
                       # examples of unadjusted analyses
-                      "Exp-GBM"=gbm.estimate, 
-                      "Exp-LM-IND"=lam.I, 
-                      "Exp-LM-INT"=lam.II) 
+                      # "Exp-GBM"=gbm.estimate, 
+                      # "Exp-LM-IND"=lam.I, 
+                      # "Exp-LM-INT"=lam.II
+                      ) 
   }
   
   estimates <- data.frame(method=names(methods), config=config_id, trial=trial)
