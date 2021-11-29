@@ -7,14 +7,15 @@ source("generate_data.R")
 main <- function() {
     args <- commandArgs(trailingOnly=TRUE)
     if(length(args) < 3) {
-      stop("Usage: run_instance.R <config ID> <all config file> <output file>")
+      stop("Usage: run_instance.R <config ID> <all config file> <output file> <number of trials>")
     }
 
     config_id <- as.numeric(args[1])
     config_file <- args[2]
     output_file <- args[3]
+    num_trials <- args[4]
 
-    for(trial in 1:25) {
+    for(trial in 1:num_trials) {
       cat(paste0("Running instance ", config_id, " trial ", trial, " from configuration file  ", config_file, "\n"))
       cat(paste0("Output file: ", output_file, "\n"))
 
