@@ -201,7 +201,7 @@ create.configurations <- function(base.dir, config.file) {
   graph.settings <- expand.grid(graph.type=c("small-world"), degree=10, p=c(0.0, 0.01, 0.10, 0.15), power=NA, size=sizes)
   
   etypes <- c("linear", "sigmoid", "rbf-friends")
-  observational.function.settings <- expand.grid(exposure.type=etypes, 
+  function.settings <- expand.grid(exposure.type=etypes, 
                                                  of.beta=c(0, 1, 5), ot.beta=c(0, 1, 5), 
                                                  confounding.coeff=c(1, 3), treatment.autocorr.coeff=c(0,1,2,10), 
                                                  graph.cluster.randomization=FALSE)
