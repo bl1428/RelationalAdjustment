@@ -203,7 +203,7 @@ create.configurations <- function(base.dir, config.file) {
   etypes <- c("linear", "sigmoid", "rbf-friends")
   function.settings <- expand.grid(exposure.type=etypes, 
                                                  of.beta=c(0, 1, 5), ot.beta=c(0, 1, 5), 
-                                                 confounding.coeff=c(1, 3), treatment.autocorr.coeff=c(0,1,2,10), 
+                                                 confounding.coeff=c(0, 1, 3), treatment.autocorr.coeff=c(0,1,2,10), 
                                                  graph.cluster.randomization=FALSE)
   # exaggerate effects for some classes of models
   multipliers <- list("sigmoid"=2)

@@ -6,20 +6,21 @@ source("generate_data.R")
 
 main <- function() {
     args <- commandArgs(trailingOnly=TRUE)
-    if(length(args) < 3) {
-      stop("Usage: run_instance.R <config ID> <all config file> <output file> <number of trials>")
+    if(length(args) < 5) {
+      stop("Usage: run_instance.R <config ID> <all config file> <output file> <data file name> <number of trials>")
     }
 
     config_id <- as.numeric(args[1])
     config_file <- args[2]
     output_file <- args[3]
-    num_trials <- args[4]
+    data_file <- args[4]
+    num_trials <- as.numeric(args[5])
 
     for(trial in 1:num_trials) {
       cat(paste0("Running instance ", config_id, " trial ", trial, " from configuration file  ", config_file, "\n"))
       cat(paste0("Output file: ", output_file, "\n"))
 
-      estimates <- run.one(config_file, config_id, trial)
+      estimates <- run.one(config_file, config_id, data_file, trial)
 
       # synchronize access to the results file
       system(paste0("lockfile results.lock"))
@@ -32,49 +33,18 @@ main <- function() {
     }
 }
 
-run.one <- function(config_file, config_id, trial) {
-  # generate data
+run.one <- function(config_file, config_id, data_file, trial) {
+  # read config & data
   configs <- read.csv(config_file)
   config <- configs[config_id, ]
-  random.seed <- config$random.seed * trial
-  gendata <- generate.by.index(configs, config_id, random.seed=random.seed, noise.sd=1)
-  gendata %>% save(file = 'gendata.RData')
+  # random.seed <- config$random.seed * trial
+  # gendata <- generate.by.index(configs, config_id, random.seed=random.seed, noise.sd=1)
+  # gendata %>% save(file = 'gendata.RData')
+  gendata <- miceadds::load.Rdata2(filename = data_file)
   
-  # estimate effects using GP, linear models, and horvitz-thompson
-
-  if(config$graph.cluster.randomization) {
-      methods <- list("Actual"=function(junk1, junk2) gendata$outcome.function, 
-                      # "Exp-GBM"=gbm.estimate, 
-                      # "Exp-LM-IND"=lam.I, 
-                      # "Exp-LM-INT"=lam.II, 
-                      "Obs-GBM-Sufficient"=obs.gbm.sufficient
-                      # "Exp-HT"=function(adj.mat, data) {
-                      #   htmeans <- ugander.horvitz.thompson(adj.mat, data, gendata$clusters, 0.75)
-                      #   return(function(myt=NULL, friendt=NULL) {
-                      #     if(is.null(myt) || is.null(friendt)) {
-                      #       return(NA)
-                      #     } else if(myt == 1 & friendt == 1) {
-                      #       return(htmeans$tmean)
-                      #     } else if(myt == 0 & friendt == 0) {
-                      #       return(htmeans$cmean)
-                      #     } else {
-                      #       return(NA)
-                      #     }
-                      #   }
-                      #   )
-                      # }
-                    )
-  } else {
-      methods <- list("Actual"=function(junk1, junk2) gendata$outcome.function, 
-                      "Obs-GBM-Sufficient"=obs.gbm.sufficient,
-                      "Obs-LM-Simple"=obs.linear.simple, 
-                      "Obs-LM-Sufficient"=obs.linear.sufficient, 
-                      # examples of unadjusted analyses
-                      # "Exp-GBM"=gbm.estimate, 
-                      # "Exp-LM-IND"=lam.I, 
-                      # "Exp-LM-INT"=lam.II
-                      ) 
-  }
+  # estimate effects
+  methods <- list("Actual"=function(junk1, junk2) gendata$outcome.function, 
+                      "Obs-GBM-Sufficient"=obs.gbm.sufficient)
   
   estimates <- data.frame(method=names(methods), config=config_id, trial=trial)
   # fit each of the models
