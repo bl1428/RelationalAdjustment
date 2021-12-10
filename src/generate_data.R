@@ -165,7 +165,7 @@ generate.data <- function(nsubjects, random.seed, graph.type, graph.parameters, 
     return(list(data=df, adj.mat=adj.mat, outcome.function=po.fun, clusters=clusters))
 }
 
-This function creates a collection of run configurations in a specified directory
+# This function creates a collection of run configurations in a specified directory
 create.rw.configurations <- function(base.dir) {
   graph.settings <- data.frame(graph.type=c('../data/email-Enron.txt'))
   
