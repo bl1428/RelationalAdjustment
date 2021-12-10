@@ -9,7 +9,7 @@ main <- function() {
       stop("Usage: generate_configs.R <base dir> <config file name>")
     }
 
-    base.dir <- as.numeric(args[1])
+    base.dir <- args[1]
     config.file <- args[2]
 
     # generate data

@@ -198,7 +198,7 @@ create.rw.configurations <- function(base.dir) {
 # This function creates a collection of run configurations in a specified directory
 create.configurations <- function(base.dir, config.file) {
   sizes <- c(1024)
-  graph.settings <- expand.grid(graph.type=c("small-world"), degree=10, p=c(0.0, 0.01, 0.10, 0.15), power=NA, size=sizes)
+  graph.settings <- expand.grid(graph.type=c("small-world"), degree=5, p=c(0.10), power=NA, size=sizes)
   
   etypes <- c("linear", "sigmoid", "rbf-friends")
   function.settings <- expand.grid(exposure.type=etypes, 
